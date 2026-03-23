@@ -2,20 +2,40 @@ package entity
 
 type Question struct {
 	ID              uint
-	Question        string
+	Text            string
 	PossibleAnswers []PossibleAnswer
-	CorrectAnswer   string
-	Difficulty      string
+	CorrectAnswerID PossibleAnswerChoice
+	Difficulty      QuestionDifficulty
 	CategoryID      uint
 }
 
 type PossibleAnswer struct {
 	ID      uint
 	Content string
-	Choice  uint8
+	Choice  PossibleAnswerChoice
 }
-type Answer struct {
-	ID         uint
-	PlayerID   uint
-	QuestionID uint
+
+type PossibleAnswerChoice uint8
+
+func (p PossibleAnswerChoice) IsValid() bool {
+	return p >= PossibleAnswerA && p <= PossibleAnswerD
+}
+
+const (
+	PossibleAnswerA PossibleAnswerChoice = iota + 1
+	PossibleAnswerB
+	PossibleAnswerC
+	PossibleAnswerD
+)
+
+type QuestionDifficulty uint8
+
+const (
+	QuestionDifficultyEasy QuestionDifficulty = iota + 1
+	QuestionDifficultyMedium
+	QuestionDifficultyHard
+)
+
+func (q QuestionDifficulty) IsValid() bool {
+	return q >= QuestionDifficultyEasy && q <= QuestionDifficultyHard
 }
