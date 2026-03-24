@@ -4,7 +4,7 @@ type Game struct {
 	ID          uint
 	CategoryID  uint
 	QuestionIDs []uint
-	Players     []Player
+	PlayerIDs   []uint
 	WinnerIDs   uint
 }
 
