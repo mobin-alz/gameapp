@@ -4,17 +4,15 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
-
 	"github.com/mobin-alz/gameapp/entity"
 )
 
 func (d *MySQLDB) IsPhoneNumberUnique(phoneNumber string) (bool, error) {
 	user := entity.User{}
-	var createdAt time.Time
+	var createdAt []uint8
 	row := d.db.QueryRow("SELECT * FROM users WHERE phone_number = ?", phoneNumber)
 
-	err := row.Scan(&user.ID, &user.Name, &user.PhoneNumber, createdAt)
+	err := row.Scan(&user.ID, &user.Name, &user.PhoneNumber, &createdAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return true, nil

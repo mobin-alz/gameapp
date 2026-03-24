@@ -2,6 +2,7 @@ package userservice
 
 import (
 	"fmt"
+
 	"github.com/mobin-alz/gameapp/entity"
 	"github.com/mobin-alz/gameapp/pkg/phonenumber"
 )
@@ -12,6 +13,10 @@ type Repository interface {
 }
 type Service struct {
 	repo Repository
+}
+
+func New(repo Repository) Service {
+	return Service{repo: repo}
 }
 
 type RegisterRequest struct {
@@ -28,6 +33,7 @@ func (s Service) Register(req RegisterRequest) (RegisterResponse, error) {
 	// validate phone number
 	if !phonenumber.IsValid(req.PhoneNumber) {
 		return RegisterResponse{}, fmt.Errorf("phone number is invalid")
+
 	}
 	// check uniqueness of phone number
 	if isUnique, err := s.repo.IsPhoneNumberUnique(req.PhoneNumber); err != nil || !isUnique {
