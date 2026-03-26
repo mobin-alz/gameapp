@@ -17,6 +17,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health-check", healthCheckHandler)
 	mux.HandleFunc("/users/register", userRegisterHandler)
+	mux.HandleFunc("/users/login", userLoginHandler)
 
 	log.Println("server is running on port :8080")
 	err := http.ListenAndServe(":8080", mux)
@@ -75,6 +76,41 @@ func userRegisterHandler(writer http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func userLoginHandler(writer http.ResponseWriter, req *http.Request) {
+	// check request method
+	if req.Method != http.MethodPost {
+		fmt.Fprintf(writer, "{\"error\":\"method not allowed\"}")
+		var t testWriter
+		fmt.Fprintf(&t, "error: %s not allowed", req.Method)
+	}
+
+	// extract request body
+	data, err := io.ReadAll(req.Body)
+	if err != nil {
+		writer.Write([]byte(
+			fmt.Sprintf(`{"error":"%v"}`, err.Error())))
+	}
+
+	// bind to struct from json (unmarshall)
+	var lReq userservice.LoginRequest
+	err = json.Unmarshal(data, &lReq)
+	if err != nil {
+		writer.Write([]byte(
+			fmt.Sprintf(`{"error":"%v"}`, err.Error())))
+		writer.Write([]byte("\n"))
+		return
+	}
+
+	mySqlRepo := mysql.New()
+	userSvc := userservice.New(mySqlRepo)
+	_, err = userSvc.Login(lReq)
+	if err != nil {
+		fmt.Errorf(`{"error":"%v"}`, err.Error())
+	}
+	writer.Write([]byte(`{"message": "user logged in"}`))
+
+}
+
 type testWriter struct {
 	data string
 }
@@ -102,4 +138,18 @@ func testUserMysqlRepo() {
 	} else {
 		fmt.Println(isUnique)
 	}
+}
+
+func testUserLoginRepo() {
+	mysqlRepo := mysql.New()
+	userSvc := userservice.New(mysqlRepo)
+	response, err := userSvc.Login(userservice.LoginRequest{
+		PhoneNumber: "09015037627",
+		Password:    "12345678",
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("login success:", response)
 }

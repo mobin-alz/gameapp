@@ -5,5 +5,6 @@ type User struct {
 	PhoneNumber string
 	Name        string
 	Avatar      string
+	Password    string
 	CreateAt    []uint8
 }

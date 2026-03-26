@@ -1,0 +1,23 @@
+# Register Endpoint EX
+POST localhost:8080/users/register
+Content-Type: "application/json"
+
+{
+    "phone_number":"09015037627",
+    "password":"12345678",
+    "name":"1234"
+}
+
+
+###
+# Login Endpoint Ex
+POST localhost:8080/users/login
+Content-Type: application/json
+
+{
+    "phone_number":"09015037627",
+    "password":"12345678"
+}
+
+
+###
