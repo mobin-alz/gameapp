@@ -20,8 +20,8 @@ func New(repo Repository) Service {
 }
 
 type RegisterRequest struct {
-	Name        string
-	PhoneNumber string
+	Name        string `json:"name" binding:"required"`
+	PhoneNumber string `json:"phone_number" binding:"required"`
 }
 
 type RegisterResponse struct {

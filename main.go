@@ -67,7 +67,7 @@ func userRegisterHandler(writer http.ResponseWriter, req *http.Request) {
 		return
 	}
 	_, err = writer.Write([]byte(`{"message": "user created"}`))
-	_, _ = writer.Write([]byte("\n"))
+	writer.Write([]byte("\n"))
 	if err != nil {
 		fmt.Println(err)
 
