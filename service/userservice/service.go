@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-
 	"github.com/mobin-alz/gameapp/entity"
 	"github.com/mobin-alz/gameapp/pkg/phonenumber"
 )
@@ -13,13 +12,20 @@ type Repository interface {
 	IsPhoneNumberUnique(phoneNumber string) (bool, error)
 	RegisterUser(u entity.User) (entity.User, error)
 	GetUserByPhoneNumber(phoneNumber string) (entity.User, bool, error)
+	GetUserByID(userID uint) (entity.User, error)
+}
+
+type AuthGenerator interface {
+	CreateAccessToken(user entity.User) (string, error)
+	CreateRefreshToken(user entity.User) (string, error)
 }
 type Service struct {
+	auth AuthGenerator
 	repo Repository
 }
 
-func New(repo Repository) Service {
-	return Service{repo: repo}
+func New(authGenerator AuthGenerator, repo Repository) Service {
+	return Service{repo: repo, auth: authGenerator}
 }
 
 type RegisterRequest struct {
@@ -85,6 +91,8 @@ type LoginRequest struct {
 	Password    string `json:"password" binding:"required"`
 }
 type LoginResponse struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 func (s Service) Login(req LoginRequest) (LoginResponse, error) {
@@ -96,16 +104,46 @@ func (s Service) Login(req LoginRequest) (LoginResponse, error) {
 		return LoginResponse{}, fmt.Errorf("unexpected error: %w", err)
 	}
 	if !exist {
-		return LoginResponse{}, fmt.Errorf("Invalid credentials")
+		return LoginResponse{}, fmt.Errorf("invalid credentials")
 	}
 
 	// compare user.Password with the req.Password
 	if user.Password != GetMD5Hash(req.Password) {
-		return LoginResponse{}, fmt.Errorf("Invalid credentials")
+		return LoginResponse{}, fmt.Errorf("invalid credentials")
 	}
 
-	// return ok
-	panic("implement me")
+	accessToken, err := s.auth.CreateAccessToken(user)
+	if err != nil {
+		return LoginResponse{}, fmt.Errorf("error on create token : %w", err)
+	}
+
+	refreshToken, err := s.auth.CreateRefreshToken(user)
+	if err != nil {
+		return LoginResponse{}, fmt.Errorf("error on create refresh token : %w", err)
+	}
+	return LoginResponse{AccessToken: accessToken, RefreshToken: refreshToken}, nil
+
+}
+
+type ProfileRequest struct {
+	UserID uint
+}
+type ProfileResponse struct {
+	Name string `json:"name"`
+}
+
+// all request inputs for interactor/service should be sanitized.
+
+func (s Service) Profile(req ProfileRequest) (ProfileResponse, error) {
+	// getUserByID
+	user, err := s.repo.GetUserByID(req.UserID)
+	if err != nil {
+		// I have not expected the repository call return "record not found" error,
+		//because I assume the interactor input is sanitized.
+		return ProfileResponse{}, fmt.Errorf("unexpected error: %w", err)
+	}
+	// return User
+	return ProfileResponse{Name: user.Name}, nil
 }
 
 func GetMD5Hash(text string) string {
