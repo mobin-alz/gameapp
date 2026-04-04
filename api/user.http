@@ -15,7 +15,7 @@ POST localhost:8080/users/login
 Content-Type: application/json
 
 {
-    "phone_number":"09146937190",
+    "phone_number":"09149081990",
     "password":"12345678"
 }
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 # Get User Profile Endpoint
 GET localhost:8080/users/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTQyMjA0MCwidXNlcl9pZCI6NX0.fA5wDyAG_Pp4CIwOGvrbi2djbx8QmmqHPijq36o85jg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTQzMTAyMiwidXNlcl9pZCI6Nn0.v4nacuvQKbeqAIv72VEfHvEIawh7FlkJVYN59y-3xhQ
 
 
 ###
