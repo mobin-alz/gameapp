@@ -1,11 +1,11 @@
 # Register Endpoint EX
 POST localhost:8080/users/register
-Content-Type: "application/json"
+Content-Type: application/json
 
 {
-    "phone_number":"09146937190",
-    "password":"12345678",
-    "name":"hesam"
+    "name":"mohammad ali",
+    "phone_number":"09149081990",
+    "password":"12345678"
 }
 
 
