@@ -1,5 +1,9 @@
 production:
   dialect: mysql
-  datasource: gameapp/gameappPassword@locahost:3306/gameapp_db
-  dir: migrations
+  datasource: gameapp:gameappPassword@tcp(localhost:3306)/gameapp_db?parseTime=true
+  dir: repository/mysql/migrations
   table: migrations
+
+#  run like this for up migration : sql-migrate up -env="production" -config=dbconfig.yml
+#  run like this for down migration : sql-migrate down -env="production" -config=dbconfig.yml limit=1
+#  run like this for get status of migrations : sql-migrate status -env="production" -config=dbconfig.yml
