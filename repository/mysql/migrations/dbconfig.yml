@@ -1,0 +1,5 @@
+development:
+  dialect: godror
+  datasource: user/password@locahost:1521/sid
+  dir: migrations/oracle
+  table: migrations
