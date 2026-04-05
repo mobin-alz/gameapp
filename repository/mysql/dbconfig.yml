@@ -1,0 +1,5 @@
+production:
+  dialect: mysql
+  datasource: gameapp/gameappPassword@locahost:3306/gameapp_db
+  dir: migrations
+  table: migrations
