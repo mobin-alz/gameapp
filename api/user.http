@@ -3,8 +3,8 @@ POST localhost:8080/users/register
 Content-Type: application/json
 
 {
-    "name":"mobinarco",
-    "phone_number":"09015037617",
+    "name":"mobin-alz",
+    "phone_number":"09902486977",
     "password":"12345678"
 }
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 # Get User Profile Endpoint
 GET localhost:8080/users/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTQ3NzU1MCwidXNlcl9pZCI6Mn0.-tIsNg45slVxL3cfmuok3PFfBEszLOa4fqr7923o-Zw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTUxMTI1OSwidXNlcl9pZCI6NH0.lpJgQTJDfrUXTqv7LJcvG6OEg9crJIFrIWpJrMQK-ms
 
 
 ###

@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mobin-alz/gameapp/entity"
+	"github.com/mobin-alz/gameapp/pkg/errmsg"
+	"github.com/mobin-alz/gameapp/pkg/richerror"
 )
 
 func (d *MySQLDB) IsPhoneNumberUnique(phoneNumber string) (bool, error) {
@@ -37,15 +39,19 @@ func (d *MySQLDB) RegisterUser(u entity.User) (entity.User, error) {
 
 func (d *MySQLDB) GetUserByPhoneNumber(phoneNumber string) (entity.User, bool, error) {
 	row := d.db.QueryRow("SELECT * FROM users WHERE phone_number = ?", phoneNumber)
+	const op = "mysql.GetUserByPhoneNumber"
 
 	user, err := scanUser(row)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return entity.User{}, false, fmt.Errorf("can't find user by phone number: %w", err)
+			return entity.User{}, false, nil
 		}
 
-		return entity.User{}, false, fmt.Errorf("mysql query error: %w", err)
+		return entity.User{}, false, richerror.New(op).
+			WithError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQuery).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	return user, true, nil
@@ -54,14 +60,19 @@ func (d *MySQLDB) GetUserByPhoneNumber(phoneNumber string) (entity.User, bool, e
 func (d *MySQLDB) GetUserByID(userID uint) (entity.User, error) {
 
 	row := d.db.QueryRow("SELECT * FROM users WHERE id = ?", userID)
+	const op = "mysql.GetUserByID"
 
 	user, err := scanUser(row)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return entity.User{}, fmt.Errorf("record not found")
+			return entity.User{}, richerror.New(op).WithError(err).
+				WithMessage(errmsg.ErrorMsgNotFound).WithKind(richerror.KindNotFound)
 		}
 
-		return entity.User{}, fmt.Errorf("mysql query error: %w", err)
+		return entity.User{}, richerror.New(op).
+			WithError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQuery).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	return user, nil

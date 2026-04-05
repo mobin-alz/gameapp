@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/mobin-alz/gameapp/entity"
 	"github.com/mobin-alz/gameapp/pkg/phonenumber"
+	"github.com/mobin-alz/gameapp/pkg/richerror"
 )
 
 type Repository interface {
@@ -108,12 +109,16 @@ type LoginResponse struct {
 }
 
 func (s Service) Login(req LoginRequest) (LoginResponse, error) {
+
+	const op = "userservice.Login"
 	//TODO-it would be better to user two separate method for existence check and getUserByPhoneNumber
 	// check the existence of phone number from repository
 	// get the user by phone_number
 	user, exist, err := s.repo.GetUserByPhoneNumber(req.PhoneNumber)
 	if err != nil {
-		return LoginResponse{}, fmt.Errorf("unexpected error: %w", err)
+		return LoginResponse{}, richerror.New(op).
+			WithError(err).
+			WithMeta(map[string]interface{}{"phone_number": req.PhoneNumber})
 	}
 	if !exist {
 		return LoginResponse{}, fmt.Errorf("invalid credentials")
@@ -156,12 +161,13 @@ type ProfileResponse struct {
 // all request inputs for interactor/service should be sanitized.
 
 func (s Service) Profile(req ProfileRequest) (ProfileResponse, error) {
+	const op = "userservice.Profile"
 	// getUserByID
 	user, err := s.repo.GetUserByID(req.UserID)
 	if err != nil {
 		// I have not expected the repository call return "record not found" error,
 		//because I assume the interactor input is sanitized.
-		return ProfileResponse{}, fmt.Errorf("unexpected error: %w", err)
+		return ProfileResponse{}, richerror.New(op).WithError(err).WithMeta(map[string]interface{}{"req": req})
 	}
 	// return User
 	return ProfileResponse{Name: user.Name}, nil
