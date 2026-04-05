@@ -31,7 +31,7 @@ func (s Server) userLogin(c echo.Context) error {
 	resp, err := s.userSvc.Login(lReq)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, echo.Map{
-			"error": "invalid credentials",
+			"error": err.Error(),
 		})
 	}
 

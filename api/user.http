@@ -3,8 +3,8 @@ POST localhost:8080/users/register
 Content-Type: application/json
 
 {
-    "name":"mohammad ali",
-    "phone_number":"09149081990",
+    "name":"mobinarco",
+    "phone_number":"09015037617",
     "password":"12345678"
 }
 
@@ -15,7 +15,7 @@ POST localhost:8080/users/login
 Content-Type: application/json
 
 {
-    "phone_number":"09149081990",
+    "phone_number":"09015037617",
     "password":"12345678"
 }
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 # Get User Profile Endpoint
 GET localhost:8080/users/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTQzMTAyMiwidXNlcl9pZCI6Nn0.v4nacuvQKbeqAIv72VEfHvEIawh7FlkJVYN59y-3xhQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTQ3NzU1MCwidXNlcl9pZCI6Mn0.-tIsNg45slVxL3cfmuok3PFfBEszLOa4fqr7923o-Zw
 
 
 ###

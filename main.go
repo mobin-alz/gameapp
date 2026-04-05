@@ -21,7 +21,6 @@ const (
 func main() {
 
 	// Echo instance (engine)
-	fmt.Println("Starting echo server")
 	cfg := config.Config{
 		HTTPServer: config.HTTPServer{Port: 8080},
 		Auth: authservice.Config{
@@ -40,9 +39,15 @@ func main() {
 		},
 	}
 
+	//TODO - add command for migrations
+	//mgr := migrator.New(cfg.Mysql)
+	//mgr.Up()
+
 	authSvc, userSvc := setupServices(cfg)
 
 	server := httpserver.New(cfg, authSvc, userSvc)
+
+	fmt.Println("Start echo server")
 	server.Serve()
 
 }
