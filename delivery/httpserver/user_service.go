@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/mobin-alz/gameapp/dto"
 	"github.com/mobin-alz/gameapp/pkg/httpmsg"
 	"github.com/mobin-alz/gameapp/service/userservice"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 
 func (s Server) userRegister(c echo.Context) error {
 
-	var req userservice.RegisterRequest
+	var req dto.RegisterRequest
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

@@ -10,7 +10,7 @@ import (
 )
 
 func (d *MySQLDB) IsPhoneNumberUnique(phoneNumber string) (bool, error) {
-
+	const op = "mysql.IsPhoneNumberUnique"
 	row := d.db.QueryRow("SELECT * FROM users WHERE phone_number = ?", phoneNumber)
 
 	_, err := scanUser(row)
@@ -20,7 +20,10 @@ func (d *MySQLDB) IsPhoneNumberUnique(phoneNumber string) (bool, error) {
 			return true, nil
 		}
 
-		return false, fmt.Errorf("mysql query error: %w", err)
+		return false, richerror.New(op).
+			WithError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQuery).
+			WithKind(richerror.KindUnexpected)
 	}
 	return false, nil
 }
