@@ -22,7 +22,7 @@ func New(repo Repository) Validator {
 	return Validator{repo: repo}
 }
 
-func (v Validator) ValidatorRegisterRequest(req dto.RegisterRequest) (error, map[string]string) {
+func (v Validator) ValidatorRegisterRequest(req dto.RegisterRequest) (map[string]string, error) {
 	// TODO - we should verify phone number by verification code
 	const op = "uservalidator.ValidatorRegisterRequest"
 	// validate phone number
@@ -42,11 +42,11 @@ func (v Validator) ValidatorRegisterRequest(req dto.RegisterRequest) (error, map
 				}
 			}
 		}
-		return richerror.New(op).
+		return fieldErrors, richerror.New(op).
 			WithError(vErr).
 			WithMessage(errmsg.ErrorMsgInvalidInput).
 			WithKind(richerror.KindInvalid).
-			WithMeta(map[string]interface{}{"req": req}), fieldErrors
+			WithMeta(map[string]interface{}{"req": req})
 	}
 
 	return nil, nil

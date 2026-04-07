@@ -15,7 +15,7 @@ func (s Server) userRegister(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err, fieldErrors := s.userValidator.ValidatorRegisterRequest(req); err != nil {
+	if fieldErrors, err := s.userValidator.ValidatorRegisterRequest(req); err != nil {
 		msg, code := httpmsg.Error(err)
 		return c.JSON(code, echo.Map{
 			"message": msg,
