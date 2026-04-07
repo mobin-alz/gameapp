@@ -7,16 +7,23 @@ import (
 	"github.com/mobin-alz/gameapp/config"
 	"github.com/mobin-alz/gameapp/service/authservice"
 	"github.com/mobin-alz/gameapp/service/userservice"
+	"github.com/mobin-alz/gameapp/validator/uservalidator"
 )
 
 type Server struct {
-	config  config.Config
-	authSvc authservice.Service
-	userSvc userservice.Service
+	config        config.Config
+	authSvc       authservice.Service
+	userSvc       userservice.Service
+	userValidator uservalidator.Validator
 }
 
-func New(config config.Config, authSvc authservice.Service, userSvc userservice.Service) Server {
-	return Server{config: config, authSvc: authSvc, userSvc: userSvc}
+func New(config config.Config, authSvc authservice.Service, userSvc userservice.Service, userValidator uservalidator.Validator) Server {
+	return Server{
+		config:        config,
+		authSvc:       authSvc,
+		userSvc:       userSvc,
+		userValidator: userValidator,
+	}
 }
 
 func (s Server) Serve() {

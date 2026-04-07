@@ -7,6 +7,7 @@ import (
 	"github.com/mobin-alz/gameapp/repository/mysql"
 	"github.com/mobin-alz/gameapp/service/authservice"
 	"github.com/mobin-alz/gameapp/service/userservice"
+	"github.com/mobin-alz/gameapp/validator/uservalidator"
 	"time"
 )
 
@@ -43,20 +44,19 @@ func main() {
 	//mgr := migrator.New(cfg.Mysql)
 	//mgr.Up()
 
-	authSvc, userSvc := setupServices(cfg)
-
-	server := httpserver.New(cfg, authSvc, userSvc)
+	authSvc, userSvc, userValidator := setupServices(cfg)
+	server := httpserver.New(cfg, authSvc, userSvc, userValidator)
 
 	fmt.Println("Start echo server")
 	server.Serve()
 
 }
 
-func setupServices(cfg config.Config) (authservice.Service, userservice.Service) {
+func setupServices(cfg config.Config) (authservice.Service, userservice.Service, uservalidator.Validator) {
 	authSvc := authservice.New(cfg.Auth)
 
 	repo := mysql.New(cfg.Mysql)
 	userSvc := userservice.New(authSvc, repo)
-
-	return authSvc, userSvc
+	uV := uservalidator.New(repo)
+	return authSvc, userSvc, uV
 }
