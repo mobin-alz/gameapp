@@ -4,7 +4,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mobin-alz/gameapp/dto"
 	"github.com/mobin-alz/gameapp/pkg/httpmsg"
-	"github.com/mobin-alz/gameapp/service/userservice"
 	"net/http"
 )
 
@@ -32,7 +31,7 @@ func (s Server) userRegister(c echo.Context) error {
 
 func (s Server) userLogin(c echo.Context) error {
 
-	var lReq userservice.LoginRequest
+	var lReq dto.LoginRequest
 	err := c.Bind(&lReq)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -60,7 +59,7 @@ func (s Server) userProfile(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 	}
 
-	resp, err := s.userSvc.Profile(userservice.ProfileRequest{UserID: claims.UserID})
+	resp, err := s.userSvc.Profile(dto.ProfileRequest{UserID: claims.UserID})
 	if err != nil {
 		msg, code := httpmsg.Error(err)
 		return echo.NewHTTPError(code, echo.Map{
