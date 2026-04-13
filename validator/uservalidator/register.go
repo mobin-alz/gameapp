@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/mobin-alz/gameapp/dto"
+	"github.com/mobin-alz/gameapp/param"
 	"github.com/mobin-alz/gameapp/pkg/errmsg"
 	"github.com/mobin-alz/gameapp/pkg/richerror"
 	"regexp"
 )
 
-func (v Validator) ValidatorRegisterRequest(req dto.RegisterRequest) (map[string]string, error) {
+func (v Validator) ValidatorRegisterRequest(req param.RegisterRequest) (map[string]string, error) {
 	// TODO - we should verify phone number by verification code
 	const op = "uservalidator.ValidatorRegisterRequest"
 	// validate phone number
