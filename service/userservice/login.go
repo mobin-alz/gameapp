@@ -12,16 +12,12 @@ func (s Service) Login(req dto.LoginRequest) (dto.LoginResponse, error) {
 	//TODO-it would be better to user two separate method for existence check and getUserByPhoneNumber
 	// check the existence of phone number from repository
 	// get the user by phone_number
-	user, exist, err := s.repo.GetUserByPhoneNumber(req.PhoneNumber)
+	user, err := s.repo.GetUserByPhoneNumber(req.PhoneNumber)
 	if err != nil {
 		return dto.LoginResponse{}, richerror.New(op).
 			WithError(err).
 			WithMeta(map[string]interface{}{"phone_number": req.PhoneNumber})
 	}
-	if !exist {
-		return dto.LoginResponse{}, fmt.Errorf("invalid credentials")
-	}
-
 	// compare user.Password with the req.Password
 	if user.Password != GetMD5Hash(req.Password) {
 		return dto.LoginResponse{}, fmt.Errorf("invalid credentials")

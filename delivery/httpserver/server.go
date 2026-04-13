@@ -5,24 +5,21 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mobin-alz/gameapp/config"
+	"github.com/mobin-alz/gameapp/delivery/httpserver/userhandler"
 	"github.com/mobin-alz/gameapp/service/authservice"
 	"github.com/mobin-alz/gameapp/service/userservice"
 	"github.com/mobin-alz/gameapp/validator/uservalidator"
 )
 
 type Server struct {
-	config        config.Config
-	authSvc       authservice.Service
-	userSvc       userservice.Service
-	userValidator uservalidator.Validator
+	config      config.Config
+	userHandler userhandler.Handler
 }
 
 func New(config config.Config, authSvc authservice.Service, userSvc userservice.Service, userValidator uservalidator.Validator) Server {
 	return Server{
-		config:        config,
-		authSvc:       authSvc,
-		userSvc:       userSvc,
-		userValidator: userValidator,
+		config:      config,
+		userHandler: userhandler.New(authSvc, userSvc, userValidator),
 	}
 }
 
@@ -34,12 +31,7 @@ func (s Server) Serve() {
 	// Routes
 	e.GET("/healthcheck", s.healthCheck)
 
-	userGroup := e.Group("/users")
-	{
-		userGroup.POST("/register", s.userRegister)
-		userGroup.POST("/login", s.userLogin)
-		userGroup.GET("/profile", s.userProfile)
-	}
+	s.userHandler.SetUserRoutes(e)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", s.config.HTTPServer.Port)))
 }

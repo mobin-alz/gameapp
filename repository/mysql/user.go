@@ -40,7 +40,7 @@ func (d *MySQLDB) RegisterUser(u entity.User) (entity.User, error) {
 	return u, nil
 }
 
-func (d *MySQLDB) GetUserByPhoneNumber(phoneNumber string) (entity.User, bool, error) {
+func (d *MySQLDB) GetUserByPhoneNumber(phoneNumber string) (entity.User, error) {
 	row := d.db.QueryRow("SELECT * FROM users WHERE phone_number = ?", phoneNumber)
 	const op = "mysql.GetUserByPhoneNumber"
 
@@ -48,16 +48,19 @@ func (d *MySQLDB) GetUserByPhoneNumber(phoneNumber string) (entity.User, bool, e
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return entity.User{}, false, nil
+			return entity.User{}, richerror.New(op).
+				WithError(err).
+				WithMessage(errmsg.ErrorMsgNotFound).
+				WithKind(richerror.KindNotFound)
 		}
-
-		return entity.User{}, false, richerror.New(op).
+		// TODO- log unexpected error for better observability
+		return entity.User{}, richerror.New(op).
 			WithError(err).
 			WithMessage(errmsg.ErrorMsgCantScanQuery).
 			WithKind(richerror.KindUnexpected)
 	}
 
-	return user, true, nil
+	return user, nil
 }
 
 func (d *MySQLDB) GetUserByID(userID uint) (entity.User, error) {
