@@ -18,7 +18,7 @@ func (v Validator) ValidatorLoginRequest(req param.LoginRequest) (map[string]str
 
 		validation.Field(&req.PhoneNumber, validation.Required,
 			validation.Match(regexp.MustCompile(PhoneNumberRegex)).Error(errmsg.ErrorMsgPhoneNumberIsNotValid),
-			validation.By(v.checkPhoneNumberUniqueness)),
+			validation.By(v.doesPhoneNumberExist)),
 	); vErr != nil {
 		var errValidation validation.Errors
 		fieldErrors := make(map[string]string)

@@ -24,7 +24,7 @@ Content-Type: application/json
 # Get User Profile Endpoint
 GET localhost:8080/users/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NTUxMTI1OSwidXNlcl9pZCI6NH0.lpJgQTJDfrUXTqv7LJcvG6OEg9crJIFrIWpJrMQK-ms
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NjE1NzIwNSwidXNlcl9pZCI6M30.l4qcLbG42uJDoqIi3SOpcmiJIgGR2ZfBoFfwTAWb1lU
 
 
 ###

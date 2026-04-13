@@ -22,7 +22,7 @@ func (s Service) Register(req param.RegisterRequest) (param.RegisterResponse, er
 		PhoneNumber: req.PhoneNumber,
 		Password:    GetMD5Hash(req.Password),
 	}
-	createdUser, err := s.repo.RegisterUser(user)
+	createdUser, err := s.repo.Register(user)
 	if err != nil {
 		return param.RegisterResponse{}, err
 	}

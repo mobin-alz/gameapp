@@ -3,19 +3,19 @@ package userhandler
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/mobin-alz/gameapp/param"
+	"github.com/mobin-alz/gameapp/pkg/constant"
 	"github.com/mobin-alz/gameapp/pkg/httpmsg"
+	"github.com/mobin-alz/gameapp/service/authservice"
 	"net/http"
 )
 
+func getClaims(c echo.Context) *authservice.Claims {
+	claims := c.Get(constant.AuthMiddlewareContextKey)
+	return claims.(*authservice.Claims)
+}
+
 func (h Handler) userProfile(c echo.Context) error {
-
-	// validate jwt token and retrieve userID from token payload
-	authHeader := c.Request().Header.Get("Authorization")
-
-	claims, err := h.authSvc.ParseToken(authHeader)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
-	}
+	claims := getClaims(c)
 
 	resp, err := h.userSvc.Profile(param.ProfileRequest{UserID: claims.UserID})
 	if err != nil {
