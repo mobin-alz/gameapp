@@ -23,7 +23,7 @@ func Load(configPath string) *Config {
 		str := strings.Replace(strings.ToLower(
 			strings.TrimPrefix(s, "GAMEAPP_")), "_", ".", -1)
 
-		return strings.Replace(str, "-", "_", -1)
+		return strings.Replace(str, "..", "_", -1)
 	}), nil)
 
 	var cfg Config
