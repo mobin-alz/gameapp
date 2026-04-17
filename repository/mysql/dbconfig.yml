@@ -2,7 +2,7 @@ production:
   dialect: mysql
   datasource: gameapp:gameappPassword@tcp(localhost:3306)/gameapp_db?parseTime=true
   dir: repository/mysql/migrations
-  table: migrations
+  table: gorp_migrations
 
 #  run like this for up migration : sql-migrate up -env="production" -config=dbconfig.yml
 #  run like this for down migration : sql-migrate down -env="production" -config=dbconfig.yml limit=1

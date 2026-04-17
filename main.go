@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mobin-alz/gameapp/config"
 	"github.com/mobin-alz/gameapp/delivery/httpserver"
+	"github.com/mobin-alz/gameapp/repository/migrator"
 	"github.com/mobin-alz/gameapp/repository/mysql"
 	"github.com/mobin-alz/gameapp/service/authservice"
 	"github.com/mobin-alz/gameapp/service/userservice"
@@ -35,8 +36,7 @@ func main() {
 	// 2 - read file and merge (overwrite)(second priority)
 	// 3- get env values and merge (overwrite) (first priority)
 
-	cfg2 := config.Load("config.yml")
-	fmt.Printf("%+v\n", cfg2)
+	config.Load("config.yml")
 
 	// Echo instance (engine)
 	cfg := config.Config{
@@ -58,8 +58,8 @@ func main() {
 	}
 
 	//TODO - add command for migrations
-	//mgr := migrator.New(cfg.Mysql)
-	//mgr.Up()
+	mgr := migrator.New(cfg.Mysql)
+	mgr.Up()
 
 	authSvc, userSvc, userValidator := setupServices(cfg)
 	server := httpserver.New(cfg, authSvc, userSvc, userValidator)
