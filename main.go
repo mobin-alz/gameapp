@@ -8,6 +8,8 @@ import (
 	"github.com/mobin-alz/gameapp/service/authservice"
 	"github.com/mobin-alz/gameapp/service/userservice"
 	"github.com/mobin-alz/gameapp/validator/uservalidator"
+	"os"
+	"strconv"
 	"time"
 )
 
@@ -19,11 +21,26 @@ const (
 	RefreshTokenExpireDuration = time.Hour * 24 * 7
 )
 
+func getHTTPServerPort(fallback int) int {
+	os.Getenv("HTTP_PORT")
+	if port, err := strconv.Atoi(os.Getenv("GAMEAPP_PORT")); err == nil {
+		return port
+	}
+	return fallback
+}
 func main() {
+
+	// order loading values for configuration :
+	// 1 - load default values(third priority)
+	// 2 - read file and merge (overwrite)(second priority)
+	// 3- get env values and merge (overwrite) (first priority)
+
+	cfg2 := config.Load()
+	fmt.Printf("%+v\n", cfg2)
 
 	// Echo instance (engine)
 	cfg := config.Config{
-		HTTPServer: config.HTTPServer{Port: 8080},
+		HTTPServer: config.HTTPServer{Port: getHTTPServerPort(8080)},
 		Auth: authservice.Config{
 			SignKey:               JwtSignKey,
 			AccessExpirationTime:  AccessTokenExpireDuration,

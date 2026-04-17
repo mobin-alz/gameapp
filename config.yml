@@ -1,0 +1,9 @@
+---
+type: yml
+auth:
+  sign_key: jwt_secret
+
+mysql:
+  port: 3306
+  host: localhost
+  db_name: gameapp_db

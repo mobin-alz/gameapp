@@ -2,15 +2,15 @@ package userhandler
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/mobin-alz/gameapp/config"
 	"github.com/mobin-alz/gameapp/param"
-	"github.com/mobin-alz/gameapp/pkg/constant"
 	"github.com/mobin-alz/gameapp/pkg/httpmsg"
 	"github.com/mobin-alz/gameapp/service/authservice"
 	"net/http"
 )
 
 func getClaims(c echo.Context) *authservice.Claims {
-	claims := c.Get(constant.AuthMiddlewareContextKey)
+	claims := c.Get(config.AuthMiddlewareContextKey)
 	return claims.(*authservice.Claims)
 }
 
