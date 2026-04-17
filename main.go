@@ -35,7 +35,7 @@ func main() {
 	// 2 - read file and merge (overwrite)(second priority)
 	// 3- get env values and merge (overwrite) (first priority)
 
-	cfg2 := config.Load()
+	cfg2 := config.Load("config.yml")
 	fmt.Printf("%+v\n", cfg2)
 
 	// Echo instance (engine)

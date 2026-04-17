@@ -10,12 +10,12 @@ import (
 	"strings"
 )
 
-func Load() *Config {
+func Load(configPath string) *Config {
 	var k = koanf.New(".")
 
 	k.Load(confmap.Provider(defaultConfig, "."), nil)
 
-	err := k.Load(file.Provider("config.yml"), yaml.Parser())
+	err := k.Load(file.Provider(configPath), yaml.Parser())
 	if err != nil {
 		_ = fmt.Errorf("error loading config file yml: %v", err)
 	}
