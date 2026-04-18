@@ -4,7 +4,6 @@ type AccessControl struct {
 	ID           uint
 	ActorID      uint
 	ActorType    ActorType
-	ResourceID   uint
 	PermissionID uint
 }
 

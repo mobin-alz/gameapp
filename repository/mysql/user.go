@@ -41,8 +41,9 @@ func (d *MySQLDB) Register(u entity.User) (entity.User, error) {
 }
 
 func (d *MySQLDB) GetUserByPhoneNumber(phoneNumber string) (entity.User, error) {
-	row := d.db.QueryRow("SELECT * FROM users WHERE phone_number = ?", phoneNumber)
 	const op = "mysql.GetUserByPhoneNumber"
+
+	row := d.db.QueryRow("SELECT * FROM users WHERE phone_number = ?", phoneNumber)
 
 	user, err := scanUser(row)
 
@@ -84,10 +85,10 @@ func (d *MySQLDB) GetUserByID(userID uint) (entity.User, error) {
 	return user, nil
 }
 
-func scanUser(row *sql.Row) (entity.User, error) {
+func scanUser(scanner Scanner) (entity.User, error) {
 	var createdAt []uint8
 	var user entity.User
-	err := row.Scan(&user.ID, &user.Name, &user.PhoneNumber, &createdAt, &user.Password)
+	err := scanner.Scan(&user.ID, &user.Name, &user.PhoneNumber, &createdAt, &user.Password)
 
 	return user, err
 }
