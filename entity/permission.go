@@ -7,6 +7,6 @@ type Permission struct {
 type PermissionTitle string
 
 const (
-	UserListPermission   = PermissionTitle("user-list")
-	UserDeletePermission = PermissionTitle("user-delete")
+	UserListPermission   = PermissionTitle("mysqluser-list")
+	UserDeletePermission = PermissionTitle("mysqluser-delete")
 )

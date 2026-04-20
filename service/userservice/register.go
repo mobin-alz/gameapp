@@ -15,12 +15,13 @@ func (s Service) Register(req param.RegisterRequest) (param.RegisterResponse, er
 
 	// hash password
 
-	// create new user in storage (db , ...)
+	// create new mysqluser in storage (db , ...)
 	user := entity.User{
 		ID:          1,
 		Name:        req.Name,
 		PhoneNumber: req.PhoneNumber,
 		Password:    GetMD5Hash(req.Password),
+		Role:        entity.UserRole,
 	}
 	createdUser, err := s.repo.Register(user)
 	if err != nil {

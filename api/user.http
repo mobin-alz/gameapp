@@ -1,10 +1,16 @@
+# Health Check
+GET localhost:8080/healthcheck
+
+
+###
+
 # Register Endpoint EX
 POST localhost:8080/users/register
 Content-Type: application/json
 
 {
     "name":"mobin-alz",
-    "phone_number":"09902496977",
+    "phone_number":"09015037617",
     "password":"12345678"
 }
 
@@ -24,7 +30,11 @@ Content-Type: application/json
 # Get User Profile Endpoint
 GET localhost:8080/users/profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NjE1NzIwNSwidXNlcl9pZCI6M30.l4qcLbG42uJDoqIi3SOpcmiJIgGR2ZfBoFfwTAWb1lU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3Njc3NDIxOCwidXNlcl9pZCI6Miwicm9sZSI6MX0.-tnb5-ZZ-Nz492NCQi9X-kgCbxjA74VX3nV2NW1Q48w
 
 
 ###
+# Get backofficeuserservice
+GET localhost:8080/backoffice/users/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3Njc3NDIxOCwidXNlcl9pZCI6Miwicm9sZSI6MX0.-tnb5-ZZ-Nz492NCQi9X-kgCbxjA74VX3nV2NW1Q48w
+

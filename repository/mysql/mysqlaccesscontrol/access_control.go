@@ -1,4 +1,4 @@
-package mysql
+package mysqlaccesscontrol
 
 import (
 	"database/sql"
@@ -6,18 +6,17 @@ import (
 	"github.com/mobin-alz/gameapp/pkg/errmsg"
 	"github.com/mobin-alz/gameapp/pkg/richerror"
 	"github.com/mobin-alz/gameapp/pkg/slice"
+	"github.com/mobin-alz/gameapp/repository/mysql"
 	"strings"
 	"time"
 )
 
-func (d *MySQLDB) GetUserPermissionTitles(userID uint) ([]entity.PermissionTitle, error) {
+func (d *DB) GetUserPermissionTitles(userID uint, role entity.Role) ([]entity.PermissionTitle, error) {
 	const op = "mysql.GetUserPermissionTitles"
-	user, err := d.GetUserByID(userID)
-	if err != nil {
-		return nil, richerror.New(op).WithError(err)
-	}
+
 	roleACL := make([]entity.AccessControl, 0)
-	rows, err := d.db.Query("SELECT * FROM access_controls WHERE actor_type= ? AND actor_id=?", entity.RoleActorType, user.Role)
+
+	rows, err := d.conn.Conn().Query("SELECT * FROM access_controls WHERE actor_type= ? AND actor_id=?", entity.RoleActorType, role)
 	if err != nil {
 		return nil, richerror.New(op).WithError(err).
 			WithMessage(errmsg.ErrorMsgSomethingWentWrong).WithKind(richerror.KindUnexpected)
@@ -45,7 +44,7 @@ func (d *MySQLDB) GetUserPermissionTitles(userID uint) ([]entity.PermissionTitle
 	}
 
 	userACl := make([]entity.AccessControl, 0)
-	userRows, err := d.db.Query("SELECT * FROM access_controls WHERE actor_type= ? AND actor_id=?", entity.UserActorType, user.ID)
+	userRows, err := d.conn.Conn().Query("SELECT * FROM access_controls WHERE actor_type= ? AND actor_id=?", entity.UserActorType, userID)
 	if err != nil {
 		return nil, richerror.New(op).WithError(err).
 			WithMessage(errmsg.ErrorMsgSomethingWentWrong).WithKind(richerror.KindUnexpected)
@@ -96,7 +95,7 @@ func (d *MySQLDB) GetUserPermissionTitles(userID uint) ([]entity.PermissionTitle
 
 	query := "SELECT * FROM permissions WHERE id IN (?" +
 		strings.Repeat(",?", len(permissionIDs)-1) + ")"
-	rows, err = d.db.Query(query, args...)
+	rows, err = d.conn.Conn().Query(query, args...)
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
@@ -130,7 +129,7 @@ func (d *MySQLDB) GetUserPermissionTitles(userID uint) ([]entity.PermissionTitle
 
 }
 
-func scanAccessControl(scanner Scanner) (entity.AccessControl, error) {
+func scanAccessControl(scanner mysql.Scanner) (entity.AccessControl, error) {
 	var createdAt time.Time
 	var acl entity.AccessControl
 
@@ -138,7 +137,7 @@ func scanAccessControl(scanner Scanner) (entity.AccessControl, error) {
 	return acl, err
 }
 
-func scanPermission(scanner Scanner) (entity.Permission, error) {
+func scanPermission(scanner mysql.Scanner) (entity.Permission, error) {
 	var createdAt time.Time
 	var permission entity.Permission
 

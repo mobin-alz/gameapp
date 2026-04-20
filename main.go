@@ -6,7 +6,11 @@ import (
 	"github.com/mobin-alz/gameapp/delivery/httpserver"
 	"github.com/mobin-alz/gameapp/repository/migrator"
 	"github.com/mobin-alz/gameapp/repository/mysql"
+	"github.com/mobin-alz/gameapp/repository/mysql/mysqlaccesscontrol"
+	"github.com/mobin-alz/gameapp/repository/mysql/mysqluser"
+	"github.com/mobin-alz/gameapp/service/authorizationservice"
 	"github.com/mobin-alz/gameapp/service/authservice"
+	"github.com/mobin-alz/gameapp/service/backofficeuserservice"
 	"github.com/mobin-alz/gameapp/service/userservice"
 	"github.com/mobin-alz/gameapp/validator/uservalidator"
 	"os"
@@ -61,19 +65,27 @@ func main() {
 	mgr := migrator.New(cfg.Mysql)
 	mgr.Up()
 
-	authSvc, userSvc, userValidator := setupServices(cfg)
-	server := httpserver.New(cfg, authSvc, userSvc, userValidator)
+	authSvc, userSvc, userValidator, backofficeUserSvc, authorizationSvc := setupServices(cfg)
+	server := httpserver.New(cfg, authSvc, userSvc, userValidator, backofficeUserSvc, authorizationSvc)
 
 	fmt.Println("Start echo server")
 	server.Serve()
 
 }
 
-func setupServices(cfg config.Config) (authservice.Service, userservice.Service, uservalidator.Validator) {
+func setupServices(cfg config.Config) (authservice.Service, userservice.Service, uservalidator.Validator,
+	backofficeuserservice.Service, authorizationservice.Service) {
 	authSvc := authservice.New(cfg.Auth)
 
-	repo := mysql.New(cfg.Mysql)
-	userSvc := userservice.New(authSvc, repo)
-	uV := uservalidator.New(repo)
-	return authSvc, userSvc, uV
+	MySqlRepo := mysql.New(cfg.Mysql)
+	userMySql := mysqluser.New(MySqlRepo)
+	userSvc := userservice.New(authSvc, userMySql)
+
+	backofficeUserSvc := backofficeuserservice.New()
+
+	aclMySql := mysqlaccesscontrol.New(MySqlRepo)
+	authorizationSvc := authorizationservice.New(aclMySql)
+
+	uV := uservalidator.New(userMySql)
+	return authSvc, userSvc, uV, backofficeUserSvc, authorizationSvc
 }

@@ -21,6 +21,10 @@ type MySQLDB struct {
 	db     *sql.DB
 }
 
+func (m *MySQLDB) Conn() *sql.DB {
+	return m.db
+}
+
 func New(config Config) *MySQLDB {
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true", config.Username, config.Password, config.Host, config.Port, config.DBName))
 	if err != nil {

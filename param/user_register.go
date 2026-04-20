@@ -9,5 +9,5 @@ type RegisterRequest struct {
 }
 
 type RegisterResponse struct {
-	User UserInfo `json:"user"`
+	User UserInfo `json:"mysqluser"`
 }

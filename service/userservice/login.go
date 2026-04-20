@@ -9,16 +9,16 @@ import (
 func (s Service) Login(req param.LoginRequest) (param.LoginResponse, error) {
 
 	const op = "userservice.Login"
-	//TODO-it would be better to user two separate method for existence check and getUserByPhoneNumber
+	//TODO-it would be better to mysqluser two separate method for existence check and getUserByPhoneNumber
 	// check the existence of phone number from repository
-	// get the user by phone_number
+	// get the mysqluser by phone_number
 	user, err := s.repo.GetUserByPhoneNumber(req.PhoneNumber)
 	if err != nil {
 		return param.LoginResponse{}, richerror.New(op).
 			WithError(err).
 			WithMeta(map[string]interface{}{"phone_number": req.PhoneNumber})
 	}
-	// compare user.Password with the req.Password
+	// compare mysqluser.Password with the req.Password
 	if user.Password != GetMD5Hash(req.Password) {
 		return param.LoginResponse{}, fmt.Errorf("invalid credentials")
 	}
