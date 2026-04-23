@@ -15,6 +15,19 @@ services:
       MYSQL_USER: gameapp
       MYSQL_PASSWORD: gameappPassword
 
+  game_app_redis:
+    image: redis:7.2.4-alpine
+    container_name: game_app_redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --loglevel warning --protected-mode no
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - game-app-redis-data:/data
+
 
 volumes:
   dbdata:
+  game-app-redis-data:

@@ -1,0 +1,8 @@
+#
+POST localhost:8080/matching/add-to-waiting-list
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYyIsImV4cCI6MTc3NzAwNzI0OCwidXNlcl9pZCI6Miwicm9sZSI6MX0.bK7fouSC7gUqumCJyZgAqRFvfsSZL8xOG2Gn4rj7bSM
+
+{
+  "category": "football"
+}
